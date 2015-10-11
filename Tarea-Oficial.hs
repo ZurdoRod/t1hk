@@ -171,6 +171,7 @@
 			evalP :: Environment -> Proposition -> Maybe Bool
 			evalP _  (Constante 	x) = Just x
 			evalP ls (Variable 		s) = find ls s
+			evalP ls (Negacion 		x) = Just $ not (extractMaybe (evalP ls x))
 			evalP ls (Conjuncion  x y) = Just $ extractMaybe (evalP ls x) && extractMaybe (evalP ls y)
 			evalP ls (Disjuncion  x y) = Just $ extractMaybe (evalP ls x) || extractMaybe (evalP ls y)
 			evalP ls (Implicacion x y) = Just $ not (extractMaybe (evalP ls x)) || extractMaybe (evalP ls y)
@@ -192,6 +193,7 @@
 			vars :: Proposition -> [String]
 			vars (Constante 	x) = []
 			vars (Variable 		s) = [s]
+			vars (Negacion  	x) = vars x
 			vars (Conjuncion  x y) = compress (vars x) (vars y)
 			vars (Disjuncion  x y) = compress (vars x) (vars y)
 			vars (Implicacion x y) = compress (vars x) (vars y)
